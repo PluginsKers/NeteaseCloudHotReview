@@ -5,8 +5,13 @@
 对于上一个热评墙的坑并不是很满意的说！那么...再开一个！
 这次我将会追逐于，轻量化，用户体验，响应方式
 
-那么？
-我可能会用到 **[Swiper](http://idangero.us/swiper/)** 和 **[jQuery](https://jquery.com/)**
+站在巨人的肩膀上
+
+**[Swiper](http://idangero.us/swiper/)**
+
+**[jQuery](https://jquery.com/)**
+
+**[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/)**
 
 运行环境？
 
