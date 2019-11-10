@@ -7,9 +7,9 @@
 
 站在巨人的肩膀上
 
-**[Swiper](http://idangero.us/swiper/)**
-**[jQuery](https://jquery.com/)**
-**[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/)**
+![http://idangero.us/swiper/](https://img.shields.io/badge/Swiper-v3.4.2-green)
+![https://jquery.com/](https://img.shields.io/badge/jQuery-v3.4.1-green)
+![https://binaryify.github.io/NeteaseCloudMusicApi/](https://img.shields.io/badge/API-v3.25.0-green)
 
 运行环境？
 
