@@ -8,18 +8,14 @@
 站在巨人的肩膀上
 
 **[Swiper](http://idangero.us/swiper/)**
-
 **[jQuery](https://jquery.com/)**
-
 **[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/)**
 
 运行环境？
 
-***PHP >= v5.4***
-
+***PHP>=5.4***
 ***JavaScript***
-
-***无需 MySQL***
+***Nginx or Apache***
 
 ## 开发日志 ##
 
