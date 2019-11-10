@@ -6,11 +6,14 @@
 这次我将会追逐于，轻量化，用户体验，响应方式
 
 那么？
-我可能会用到**[Swiper](http://idangero.us/swiper/)**和**[jQuery](https://jquery.com/)**
+我可能会用到 **[Swiper](http://idangero.us/swiper/)** 和 **[jQuery](https://jquery.com/)**
 
 运行环境？
-***PHP >= v5.4 ***
+
+***PHP >= v5.4***
+
 ***JavaScript***
+
 ***无需 MySQL***
 
 ## 开发日志 ##
@@ -26,4 +29,4 @@
 
 ## 获取 ##
 
-这里还没有信息
+暂时还没有信息
