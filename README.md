@@ -30,6 +30,11 @@
 - 调用接口[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/)
 - 排行榜和歌单的热评墙雏形已成
 
+### Ver 0.0.5 ###
+
+- 更新前端页面适应以及减少花里胡哨的内存占用
+ - 来自Kevin(QQ：870483093)大佬的亿点细节
+
 ## 获取 ##
 
 暂时还没有信息
