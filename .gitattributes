@@ -1,4 +1,4 @@
 *.js linguist-language=javascript
-*.css linguist-language=javascript
-*.html linguist-language=javascript
-*.php linguist-language=javascript
+*.css linguist-language=css
+*.html linguist-language=html
+*.php linguist-language=php
