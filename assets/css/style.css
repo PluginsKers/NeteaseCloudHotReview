@@ -1,0 +1,396 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:700);
+@charset "utf-8";
+* {
+    transition: all .3s;
+}
+
+body {
+    overflow: hidden;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    animation: gradient 16s cubic-bezier(0, 0, 0, 0) infinite;
+}
+
+.background>.cover {
+    background: url(https://tenapi.cn/img/acg.php) no-repeat;
+    background-color: #759de6;
+    background-size: cover!important;
+    background-position: center!important;
+    background-blend-mode: darken!important;
+    width: 100%;
+    height: 100%;
+    transition: background 5s;
+}
+
+.netease-outbox {
+    height: 56px;
+    position: fixed;
+    bottom: -24px;
+    opacity: 0.5;
+    color: #fff;
+    width: 521px;
+    background: #ffffff;
+    border-radius: 5px 5px 0px 0px;
+    left: 50%;
+    margin-left: -260px;
+}
+
+.netease-player {
+    height: 100%;
+    padding: 10px 0px 10px 52px;
+}
+
+.netease-player div:nth-child(1) {
+    white-space: nowrap;
+    display: block;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    font-weight: 550;
+    max-width: 150px;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #000000;
+}
+
+.netease-player div:nth-child(2) {
+    max-width: 200px;
+    font-size: 10px;
+    opacity: 0.6;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000000;
+}
+
+.netease-pic {
+    opacity: 0.7;
+    position: absolute;
+    z-index: 10005;
+    top: 8px;
+    left: 8px;
+    bottom: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+}
+
+.netease-btn {
+    position: absolute;
+    z-index: 10010;
+    right: 16px;
+    bottom: -23px;
+    padding: 8px 10px 4px 10px;
+    box-shadow: 0px 1px 6px #558B2F;
+    background: linear-gradient(145deg, #C4E759, #6DE195);
+    border-radius: 5px 5px 0px 0px;
+    cursor: pointer;
+}
+
+.netease-btn img {
+    width: 24px;
+}
+
+@media(max-width: 540px) {
+    .netease-outbox {
+        width: 100%;
+        left: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+}
+
+#_overlay_ {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.netease-outbox:hover {
+    bottom: 0px;
+    opacity: 1;
+}
+
+.netease-outbox:hover .netease-btn {
+    bottom: 0px;
+}
+
+.netease-outbox:hover .netease-player div:nth-child(1) {
+    white-space: normal;
+    display: inline;
+}
+
+
+/* GRID STYLING */
+
+.spinner-box {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+
+/* SOLAR SYSTEM */
+
+.solar-system {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+}
+
+.earth-orbit {
+    width: 165px;
+    height: 165px;
+    -webkit-animation: spin 12s linear 0s infinite;
+    -ms-animation: spin 12s linear 0s infinite;
+}
+
+.venus-orbit {
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 7.4s linear 0s infinite;
+    -ms-animation: spin 7.4s linear 0s infinite;
+}
+
+.mercury-orbit {
+    width: 90px;
+    height: 90px;
+    -webkit-animation: spin 3s linear 0s infinite;
+    -ms-animation: spin 3s linear 0s infinite;
+}
+
+.planet {
+    position: absolute;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #3ff9dc;
+}
+
+.sun {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #ffab91;
+}
+
+
+/* KEYFRAMES */
+
+#playlist {
+    color: #ffffff;
+    display: none;
+    width: 98%;
+    max-height: 70vh;
+    position: relative;
+    list-style: none;
+    padding: 0;
+    overflow-y: overlay;
+}
+
+.playlistPic {
+    width: 40px;
+    height: 40px;
+    background-position: center;
+    border: 1px solid #ffffff;
+    margin: 3px 0px;
+}
+
+.playlistTitle {
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    box-align: center;
+}
+
+#playlist>li {
+    display: inline-flex;
+}
+
+#playlist>li:hover {
+    background: #adadad;
+}
+
+#neteaseReview .silde {
+    margin: auto 0;
+    cursor: default;
+}
+
+.background-review {
+    position: fixed;
+    height: 100%;
+    text-align: center;
+    color: hsla(360, 45%, 95%, .9);
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: .8em;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-shadow: hsla(0, 45%, 5%, .3) 0 0 1px, hsla(360, 55%, 95%, .3) 0 -1px 2px, hsla(0, 45%, 5%, .3) 0 -1px 2px, hsla(360, 55%, 95%, .3) 0 20px 15px;
+    cursor: auto;
+    z-index: -1;
+}
+
+.title-h1 {
+    font-size: 3em;
+    opacity: .4;
+    font-size: 3vh;
+}
+
+.title-h3 {
+    float: right;
+    margin-top: -16px;
+    margin-right: 10%;
+    font-size: 1em;
+    opacity: .1;
+}
+
+.title-style {
+    -webkit-animation: fade_text 8s infinite ease-in;
+    -ms-animation: fade_text 8s infinite ease-in;
+    -moz-animation: fade_text 8s infinite ease-in;
+    -o-animation: fade_text 8s infinite ease-in;
+    animation: fade_text 8s infinite ease-in;
+    letter-spacing: 2px;
+}
+
+
+/* 进度条 */
+
+input#bar[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    height: 0px;
+    width: 0px;
+    border: 0;
+    background: #93e37a;
+}
+
+input#bar[type="range"] {
+    opacity: 0;
+    -webkit-appearance: button;
+    overflow: hidden;
+    width: 100%;
+    height: 3px;
+    outline: none;
+    background: #90e47d;
+    position: absolute;
+    margin: 0;
+    padding: 0px;
+    border-radius: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
+
+.player-bar {
+    overflow: hidden;
+    width: 100%;
+    height: 3px;
+    outline: none;
+    background: #90e47d;
+    position: absolute;
+    margin: 0;
+    padding: 0px;
+    border-radius: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+@keyframes fade_text {
+    0% {
+        opacity: 1;
+    }
+    10% {
+        opacity: .8;
+    }
+    25% {
+        opacity .5;
+    }
+    50% {
+        opacity: .3;
+    }
+    65% {
+        opacity: .5;
+    }
+    90% {
+        opacity: .8;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes lazyin {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        filter: blur(2px);
+    }
+    25% {
+        filter: blur(4px);
+    }
+    50% {
+        filter: blur(6px);
+    }
+    75% {
+        filter: blur(5px);
+    }
+    100% {
+        filter: blur(3px);
+    }
+}

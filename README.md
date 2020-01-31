@@ -1,27 +1,29 @@
-## 写在前面 ##
+## 灵感来自
 
-![https://blog.52craft.cc/index.php/archives/19/](https://img.shields.io/badge/build-v0.0.1-green)
+[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
-对于上一个热评墙的坑并不是很满意的说！那么...再开一个！
-这次我将会追逐于，轻量化，用户体验，响应方式
+[disoul/electron-cloud-music](https://github.com/disoul/electron-cloud-music)
 
-----
+[darknessomi/musicbox](https://github.com/darknessomi/musicbox)
 
-站在巨人的肩膀上
+[sqaiyan/netmusic-node](https://github.com/sqaiyan/netmusic-node)
 
-![http://idangero.us/swiper/](https://img.shields.io/badge/Swiper-v3.4.2-green)
-![https://jquery.com/](https://img.shields.io/badge/jQuery-v3.4.1-green)
-![https://binaryify.github.io/NeteaseCloudMusicApi/](https://img.shields.io/badge/API-v3.25.0-green)
+## 写在前面
 
-运行环境？
+![https://blog.52craft.cc/index.php/archives/19/](https://img.shields.io/badge/build-v1.0.0-green)
 
-***PHP>=5.4***
-***JavaScript***
-***Nginx or Apache***
+对于上一个热评墙的坑并不是很满意的说！  
+那么...再开一个！   
+这次我将会追逐于，轻量化，用户体验，响应方式。    
+对此，我使用了
 
-## 开发日志 ##
+![http://idangero.us/swiper/](https://img.shields.io/badge/Swiper-v5.3.0-green)     
+![https://jquery.com/](https://img.shields.io/badge/jQuery-v3.4.1-green)    
+![https://binaryify.github.io/NeteaseCloudMusicApi/](https://img.shields.io/badge/API-v3.25.0-green)    
 
-### Ver 0.0.1 ###
+## 开发日志
+
+### Version 0.0.1
 
 - 创建轮子
 - 基本架构
@@ -30,11 +32,18 @@
 - 调用接口[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/)
 - 排行榜和歌单的热评墙雏形已成
 
-### Ver 0.0.5 ###
+### Version 0.0.5
 
 - 更新前端页面适应以及减少花里胡哨的内存占用
- - 来自Kevin(QQ：870483093)大佬的亿点细节
 
-## 获取 ##
+### Version 1.0.0
 
-暂时还没有信息
+- 他终于被我issue了上了仓库
+> 这一个版本几乎大改咯...
+- 修改了界面的样式
+- 整理了逻辑，重构了所有该存在的不该存在的
+- 他依旧没有方法去逐步调用（反正我喜欢）
+
+## 获取
+
+章鱼猫
