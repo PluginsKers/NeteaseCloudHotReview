@@ -39,7 +39,7 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
     mousewheel: false,
     on: {
         slideChangeTransitionStart: function() {
-            player[0].pause();
+            playerControl('pause');
         },
         slideChangeTransitionEnd: function() {
             if (NeteaseReview.isEnd) {
@@ -126,26 +126,26 @@ function playerControl(c) {
     a = $("img#player");
     switch (c) {
         case 'play':
-            a.attr('src', './assets/img/pause.png');
+            a.attr('src', './assets/img/play.png');
             player.attr('status', 'play');
             player[0].play();
             break;
 
         case 'pause':
-            a.attr('src', './assets/img/play.png');
+            a.attr('src', './assets/img/pause.png');
             player.attr('status', 'pause');
             player[0].pause();
             break;
 
         default:
             if (player.attr('status') == 'play') {
-                a.attr('src', './assets/img/play.png');
-                player.attr('status', 'pause');
-                player[0].play();
-            } else {
                 a.attr('src', './assets/img/pause.png');
-                player.attr('status', 'play');
+                player.attr('status', 'pause');
                 player[0].pause();
+            } else {
+                a.attr('src', './assets/img/play.png');
+                player.attr('status', 'play');
+                player[0].play();
             }
             break;
     }
@@ -168,7 +168,7 @@ function playerLoader(ids) {
     if (playerId) {
         music = ajaxRequest('/song/url', 'id=' + ids);
         player.attr('src', music['data'][0]['url']);
-        player[0].play();
+        playerControl('play');
     }
 
     e = $("input#bar");
