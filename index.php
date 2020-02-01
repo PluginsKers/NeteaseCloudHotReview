@@ -1,3 +1,16 @@
+<?php
+
+/**
+ * 
+ * NeteaseCloudHotReview
+ * @author PluginsKers
+ * @version 1.2.0
+ * @url https://netease.52craft.cc/
+ * @github https://github.com/PluginsKers/NeteaseCloudHotReview
+ * 
+ * 
+ */
+?>
 <!doctype html>
 <html>
 
@@ -8,7 +21,6 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<meta name="theme-color" content="#9e9e9ecc" />
 	<link rel="stylesheet" type="text/css" href="./assets/css/swiper.min.css">
 	<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 	<script type="text/javascript" src="./assets/js/jquery-3.4.1.min.js"></script>

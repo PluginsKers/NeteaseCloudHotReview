@@ -2,6 +2,7 @@
 @charset "utf-8";
 * {
     transition: all .3s;
+    font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif;
 }
 
 body {

@@ -2,7 +2,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.1.0
+ * @version 1.2.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 
@@ -18,10 +18,12 @@ var API = "http://www.china-4s.com";
  * Config of APP
  */
 var playList = _get_('l'); // 歌单ID
-var onceLoad = 10; // 一次加载多少
+var onceLoad = 3; // 一次加载多少
 var player = $("audio#player");
 var playerBar = $(".player-bar").eq(0);
 var playerId; // 全局ID
+var cacheDataPlaylist;
+var cacheDataComments;
 var NeteaseReview = new Swiper("div#neteaseReview", {
     wrapperClass: "wrapper",
     slideClass: "silde",
@@ -34,23 +36,19 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
     noSwiping: true,
     keyboard: true,
     mousewheel: false,
-    speed: 200,
     on: {
         slideChangeTransitionStart: function() {
-            _overlay_('show');
             player[0].pause();
         },
         slideChangeTransitionEnd: function() {
-
             if (NeteaseReview.isEnd) {
-                detailLoader(playList, onceLoad, NeteaseReview.slides.length - 1);
+                detailLoader(playList, onceLoad, parseInt($.cookie('play')) - 1);
             }
 
             slide = NeteaseReview.slides[NeteaseReview.activeIndex];
             id = slide.getAttribute('music-id');
             playerId = id; // 同步全局id
             playerLoader(id);
-            commentLoader(id);
             $("div.cover").eq(0).css("background-color", _color_());
             _overlay_('hidden');
         },
@@ -58,7 +56,15 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
             $.cookie('play', parseInt($.cookie('play')) - 1, { expires: 1 });
         },
         slideNextTransitionStart: function() {
+            _overlay_('show');
             $.cookie('play', parseInt($.cookie('play')) + 1, { expires: 1 });
+        },
+        slideNextTransitionEnd: function() {
+            cacheDataComments = null;
+
+            slide = NeteaseReview.slides[NeteaseReview.activeIndex];
+            id = slide.getAttribute('music-id');
+            commentLoader(id);
         },
     },
 });
@@ -67,11 +73,11 @@ $(function() {
     if (playList) {
 
     } else {
-        NeteaseReview.appendSlide('<div class="silde" music-id="1306507078"><h1 id="comment" class="title-h1 title-style">无法获得歌单信息</h1><h3 id="author" class="title-h3 title-style">请传入歌单ID</h3></div>');
+        NeteaseReview.appendSlide('<div class="silde"><h1 id="comment" class="title-h1 title-style">无法获得歌单信息</h1><h3 id="author" class="title-h3 title-style">请传入歌单ID</h3></div>');
         return false;
     }
 
-    NeteaseReview.appendSlide('<div class="silde" music-id="1306507078"><h1 id="comment" class="title-h1 title-style">网易云热评墙(双击评论可刷新)</h1><h3 id="author" class="title-h3 title-style">向左滑动开始你的旅程</h3></div>');
+    NeteaseReview.appendSlide('<div class="silde"><h1 id="comment" class="title-h1 title-style">网易云热评墙(双击评论可刷新)</h1><h3 id="author" class="title-h3 title-style">向左滑动开始你的旅程</h3></div>');
 
     cList = $.cookie('list');
     cPlay = $.cookie('play');
@@ -85,7 +91,6 @@ $(function() {
         detailLoader(playList, onceLoad);
     }
 
-    detailLoader(playList, onceLoad);
     $("div.cover").eq(0).css("background-color", _color_());
     /**
      * Event Listeners
@@ -93,17 +98,30 @@ $(function() {
     player.on('ended', function() {
         NeteaseReview.slideNext();
     });
-    $("h1#comment").dblclick(function() {
+    $("h1#comment:not(:first)").dblclick(function() {
         commentLoader(playerId);
     });
 });
 
 function commentLoader(id) {
-    data = ajaxRequest('/comment/hot', 'type=0&id=' + id);
-    comment = data['hotComments'][Math.floor(Math.random() * data['hotComments'].length)];
+    if (cacheDataComments) {
+        data = cacheDataComments;
+    } else {
+        data = ajaxRequest('/comment/hot', 'type=0&id=' + id);
+        cacheDataComments = data;
+    }
+
     slide = $("div[music-id='" + id + "']");
+
+    for (c = 0; c < data['hotComments'].length; c++) {
+        comment = data['hotComments'][Math.floor(Math.random() * data['hotComments'].length)];
+        if (comment['content'] && comment['user']['nickname'] && slide.find($("h1#comment")).text() != comment['content']) {
+            break;
+        }
+    }
+
     slide.find($("h1#comment")).text(comment['content']);
-    slide.find($("h3#author")).text(comment['user']['nickname']);
+    slide.find($("h3#author")).text('来自 ' + comment['user']['nickname']);
 }
 
 function playerControl(c) {
@@ -136,17 +154,24 @@ function playerControl(c) {
 }
 
 function playerLoader(ids) {
-    data = ajaxRequest('/song/detail', 'ids=' + ids);
-    music = ajaxRequest('/song/url', 'id=' + ids);
-    song = data['songs'][0];
+    for (e = 0; e < cacheDataPlaylist['playlist']['tracks'].length; e++) {
+        if (cacheDataPlaylist['playlist']['tracks'][e]['id'] == playerId) {
+            song = cacheDataPlaylist['playlist']['tracks'][e];
+        }
+    }
+
     for (i = 0; i < song['ar'].length; i++) {
         artist = song['ar'][i]['name'];
     }
     $(".netease-pic").eq(0).attr('src', song['al']['picUrl']);
     $(".netease-name").eq(0).text(song['name']);
     $(".netease-artist").eq(0).text(artist);
-    player.attr('src', music['data'][0]['url']);
-    player[0].play();
+
+    if (playerId) {
+        music = ajaxRequest('/song/url', 'id=' + ids);
+        player.attr('src', music['data'][0]['url']);
+        player[0].play();
+    }
 
     e = $("input#bar");
     e.attr('max', song['dt']);
@@ -161,14 +186,19 @@ function playerLoader(ids) {
 
 function detailLoader(id, m, b = 0) {
     _overlay_('show');
-    data = ajaxRequest('/playlist/detail', 'id=' + id);
+    if (cacheDataPlaylist && cacheDataPlaylist['playlist']['id'] == $.cookie('list')) {
+        data = cacheDataPlaylist;
+    } else {
+        data = ajaxRequest('/playlist/detail', 'id=' + id);
+        cacheDataPlaylist = data;
+    }
     $("title").text(data['playlist']['name']);
     c = 0
     for (e = b; e < data['playlist']['tracks'].length && c < m; e++) {
         tracks = data['playlist']['tracks'][e];
         name = tracks['name'];
         id = tracks['id'];
-        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '"><h1 id="comment" class="title-h1 title-style"></h1><h3 id="author" class="title-h3 title-style"></h3></div>');
+        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '"><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style"></h3></div>');
         c++;
     }
     _overlay_('hidden');
@@ -195,11 +225,13 @@ function _overlay_(s) {
     switch (s) {
         case 'show':
             NeteaseReview.keyboard.disable();
+            NeteaseReview.allowSlideNext = false;
             $("body").append('<div class="_overlay_"><div class="spinner-box"><div class="solar-system"><div class="earth-orbit orbit"><div class="planet earth"></div><div class="venus-orbit orbit"><div class="planet venus"></div><div class="mercury-orbit orbit"><div class="planet mercury"></div><div class="sun"></div></div></div></div></div></div></div>');
             break;
 
         case 'hidden':
             NeteaseReview.keyboard.enable();
+            NeteaseReview.allowSlideNext = true;
             if ($("._overlay_").length > 0) {
                 $("._overlay_").eq(0).remove();
             }
@@ -212,9 +244,9 @@ function _overlay_(s) {
 }
 
 function _color_() {
-    this.r = Math.floor(Math.random() * 255);
-    this.g = Math.floor(Math.random() * 255);
-    this.b = Math.floor(Math.random() * 255);
+    this.r = Math.floor(Math.random() * 250);
+    this.g = Math.floor(Math.random() * 250);
+    this.b = Math.floor(Math.random() * 250);
     return 'rgba(' + this.r + ', ' + this.g + ', ' + this.b + ', 1)';
 }
 
