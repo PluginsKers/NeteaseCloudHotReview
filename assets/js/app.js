@@ -2,7 +2,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.0.0
+ * @version 1.1.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 
@@ -12,15 +12,16 @@
 /**
  * API of NeteaseCloudMusicApi
  */
-
-// var API = "https://music.aityp.com";
 var API = "http://www.china-4s.com";
 
 /**
  * Config of APP
  */
+var playList = _get_('l'); // 歌单ID
+var onceLoad = 10; // 一次加载多少
 var player = $("audio#player");
 var playerBar = $(".player-bar").eq(0);
+var playerId; // 全局ID
 var NeteaseReview = new Swiper("div#neteaseReview", {
     wrapperClass: "wrapper",
     slideClass: "silde",
@@ -40,24 +41,60 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
             player[0].pause();
         },
         slideChangeTransitionEnd: function() {
+
+            if (NeteaseReview.isEnd) {
+                detailLoader(playList, onceLoad, NeteaseReview.slides.length - 1);
+            }
+
             slide = NeteaseReview.slides[NeteaseReview.activeIndex];
             id = slide.getAttribute('music-id');
+            playerId = id; // 同步全局id
             playerLoader(id);
             commentLoader(id);
             $("div.cover").eq(0).css("background-color", _color_());
             _overlay_('hidden');
         },
+        slidePrevTransitionStart: function() {
+            $.cookie('play', parseInt($.cookie('play')) - 1, { expires: 1 });
+        },
+        slideNextTransitionStart: function() {
+            $.cookie('play', parseInt($.cookie('play')) + 1, { expires: 1 });
+        },
     },
 });
 
 $(function() {
-    detailLoader('2026237819', 6);
+    if (playList) {
+
+    } else {
+        NeteaseReview.appendSlide('<div class="silde" music-id="1306507078"><h1 id="comment" class="title-h1 title-style">无法获得歌单信息</h1><h3 id="author" class="title-h3 title-style">请传入歌单ID</h3></div>');
+        return false;
+    }
+
+    NeteaseReview.appendSlide('<div class="silde" music-id="1306507078"><h1 id="comment" class="title-h1 title-style">网易云热评墙(双击评论可刷新)</h1><h3 id="author" class="title-h3 title-style">向左滑动开始你的旅程</h3></div>');
+
+    cList = $.cookie('list');
+    cPlay = $.cookie('play');
+    if (cPlay && cPlay > 0 && cList && cList == playList) {
+        $("h3#author").text('已为你跳转到上次关闭时的进度');
+        $.cookie('play', parseInt(cPlay) - 1, { expires: 1 }); // 去重
+        detailLoader(playList, onceLoad, cPlay);
+    } else {
+        $.cookie('list', playList, { expires: 1 });
+        $.cookie('play', '0', { expires: 1 });
+        detailLoader(playList, onceLoad);
+    }
+
+    detailLoader(playList, onceLoad);
     $("div.cover").eq(0).css("background-color", _color_());
     /**
      * Event Listeners
      */
     player.on('ended', function() {
         NeteaseReview.slideNext();
+    });
+    $("h1#comment").dblclick(function() {
+        commentLoader(playerId);
     });
 });
 
@@ -123,7 +160,9 @@ function playerLoader(ids) {
 }
 
 function detailLoader(id, m, b = 0) {
+    _overlay_('show');
     data = ajaxRequest('/playlist/detail', 'id=' + id);
+    $("title").text(data['playlist']['name']);
     c = 0
     for (e = b; e < data['playlist']['tracks'].length && c < m; e++) {
         tracks = data['playlist']['tracks'][e];
@@ -155,17 +194,19 @@ function ajaxRequest(url, data) {
 function _overlay_(s) {
     switch (s) {
         case 'show':
-            $("body").append('<div id="_overlay_"><div class="spinner-box"><div class="solar-system"><div class="earth-orbit orbit"><div class="planet earth"></div><div class="venus-orbit orbit"><div class="planet venus"></div><div class="mercury-orbit orbit"><div class="planet mercury"></div><div class="sun"></div></div></div></div></div></div></div>');
+            NeteaseReview.keyboard.disable();
+            $("body").append('<div class="_overlay_"><div class="spinner-box"><div class="solar-system"><div class="earth-orbit orbit"><div class="planet earth"></div><div class="venus-orbit orbit"><div class="planet venus"></div><div class="mercury-orbit orbit"><div class="planet mercury"></div><div class="sun"></div></div></div></div></div></div></div>');
             break;
 
         case 'hidden':
-            if ($("#_overlay_").length > 0) {
-                $("#_overlay_").remove();
+            NeteaseReview.keyboard.enable();
+            if ($("._overlay_").length > 0) {
+                $("._overlay_").eq(0).remove();
             }
             break;
 
         default:
-            console.log('error');
+            console.log("No Command");
             break;
     }
 }
@@ -175,4 +216,11 @@ function _color_() {
     this.g = Math.floor(Math.random() * 255);
     this.b = Math.floor(Math.random() * 255);
     return 'rgba(' + this.r + ', ' + this.g + ', ' + this.b + ', 1)';
+}
+
+function _get_(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
 }

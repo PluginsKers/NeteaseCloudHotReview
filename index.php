@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="./assets/css/swiper.min.css">
 	<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 	<script type="text/javascript" src="./assets/js/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="./assets/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="./assets/js/swiper.min.js"></script>
 	<title>网易云热评墙</title>
 </head>
@@ -22,10 +23,6 @@
 	</div>
 	<div id="neteaseReview" class="swiper-container background-review">
 		<div class="wrapper">
-			<div class="silde" music-id="1306507078">
-				<h1 id="comment" class="title-h1 title-style">网易云热评墙</h1>
-				<h3 id="author" class="title-h3 title-style">滑动开始您的旅程</h3>
-			</div>
 		</div>
 	</div>
 	<div class="netease-outbox">
