@@ -24,6 +24,7 @@ var playerBar = $(".player-bar").eq(0);
 var playerId; // 全局ID
 var cacheDataPlaylist;
 var cacheDataComments;
+var commentEvent;
 var NeteaseReview = new Swiper("div#neteaseReview", {
     wrapperClass: "wrapper",
     slideClass: "silde",
@@ -93,13 +94,10 @@ $(function() {
 
     $("div.cover").eq(0).css("background-color", _color_());
     /**
-     * Event Listeners
+     * 初始化事件监听
      */
     player.on('ended', function() {
         NeteaseReview.slideNext();
-    });
-    $("h1#comment:not(:eq(0))").dblclick(function() {
-        commentLoader(playerId);
     });
 });
 
@@ -186,6 +184,7 @@ function playerLoader(ids) {
 
 function detailLoader(id, m, b = 0) {
     _overlay_('show');
+    $("h1.title-h1:not(:eq(0))").unbind('dblclick', commentEvent); // 删除现有的双击监听
     if (cacheDataPlaylist && cacheDataPlaylist['playlist']['id'] == $.cookie('list')) {
         data = cacheDataPlaylist;
     } else {
@@ -198,9 +197,13 @@ function detailLoader(id, m, b = 0) {
         tracks = data['playlist']['tracks'][e];
         name = tracks['name'];
         id = tracks['id'];
-        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '"><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style"></h3></div>');
+        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '""><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style"></h3></div>');
         c++;
     }
+    // 监听所有刷新
+    $("h1.title-h1:not(:eq(0))").dblclick(commentEvent = function() {
+        commentLoader(playerId);
+    });
     _overlay_('hidden');
 }
 
