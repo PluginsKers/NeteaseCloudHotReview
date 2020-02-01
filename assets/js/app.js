@@ -98,7 +98,7 @@ $(function() {
     player.on('ended', function() {
         NeteaseReview.slideNext();
     });
-    $("h1#comment:not(:first)").dblclick(function() {
+    $("h1#comment:not(:eq(0))").dblclick(function() {
         commentLoader(playerId);
     });
 });
