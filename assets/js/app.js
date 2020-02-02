@@ -42,10 +42,6 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
             playerControl('pause');
         },
         slideChangeTransitionEnd: function() {
-            if (NeteaseReview.isEnd) {
-                detailLoader(playList, onceLoad, parseInt($.cookie('play')) - 1);
-            }
-
             slide = NeteaseReview.slides[NeteaseReview.activeIndex];
             id = slide.getAttribute('music-id');
             playerId = id; // 同步全局id
@@ -61,6 +57,10 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
             $.cookie('play', parseInt($.cookie('play')) + 1, { expires: 1 });
         },
         slideNextTransitionEnd: function() {
+            if (NeteaseReview.isEnd) {
+                detailLoader(playList, onceLoad, parseInt($.cookie('play')) - 1);
+            }
+
             cacheDataComments = null;
 
             slide = NeteaseReview.slides[NeteaseReview.activeIndex];
