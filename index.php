@@ -4,7 +4,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.2.0
+ * @version 1.3.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 
@@ -50,7 +50,7 @@
 			<div class="netease-artist">艺术家</div>
 		</div>
 	</div>
-
+	<textarea id="copyarea"></textarea>
 	<script type="text/javascript" src="./assets/js/app.js"></script>
 </body>
 

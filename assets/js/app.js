@@ -2,7 +2,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.2.0
+ * @version 1.3.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 
@@ -184,7 +184,7 @@ function playerLoader(ids) {
 
 function detailLoader(id, m, b = 0) {
     _overlay_('show');
-    $("h1.title-h1:not(:eq(0))").unbind('dblclick', commentEvent); // 删除现有的双击监听
+    $("h1.title-h1").unbind('dblclick'); // 删除现有的双击监听
     if (cacheDataPlaylist && cacheDataPlaylist['playlist']['id'] == $.cookie('list')) {
         data = cacheDataPlaylist;
     } else {
@@ -197,14 +197,26 @@ function detailLoader(id, m, b = 0) {
         tracks = data['playlist']['tracks'][e];
         name = tracks['name'];
         id = tracks['id'];
-        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '""><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style"></h3></div>');
+        NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '""><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style" onclick="copyComment()">加载中...</h3></div>');
         c++;
     }
-    // 监听所有刷新
-    $("h1.title-h1:not(:eq(0))").dblclick(commentEvent = function() {
+    $("h1.title-h1:not(:eq(0))").dblclick(function() {
+        console.log('dblclick');
         commentLoader(playerId);
     });
     _overlay_('hidden');
+}
+
+function copyComment() {
+    console.log('copy');
+    slide = $("div[music-id='" + playerId + "']");
+    q = slide.find($("h1#comment")).text();
+    w = slide.find($("h3#author")).text();
+    e = $("#copyarea");
+    e.val(q + "\r" + w);
+    e.select();
+    document.execCommand("Copy");
+    e.val('');
 }
 
 function ajaxRequest(url, data) {
