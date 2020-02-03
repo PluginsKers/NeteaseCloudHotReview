@@ -4,7 +4,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.3.0
+ * @version 1.4.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 

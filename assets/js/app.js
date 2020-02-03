@@ -2,7 +2,7 @@
  * 
  * NeteaseCloudHotReview
  * @author PluginsKers
- * @version 1.3.0
+ * @version 1.4.0
  * @url https://netease.52craft.cc/
  * @github https://github.com/PluginsKers/NeteaseCloudHotReview
  * 
@@ -10,21 +10,23 @@
  */
 
 /**
- * API of NeteaseCloudMusicApi
+ * API
  */
 var API = "http://www.china-4s.com";
 
 /**
- * Config of APP
+ * 初始化
  */
-var playList = _get_('l'); // 歌单ID
-var onceLoad = 3; // 一次加载多少
-var player = $("audio#player");
-var playerBar = $(".player-bar").eq(0);
-var playerId; // 全局ID
-var cacheDataPlaylist;
-var cacheDataComments;
-var commentEvent;
+var playList = _get_('l'), // 歌单ID
+    onceLoad = 3, // 一次加载多少
+    player = $("audio#player"),
+    playerBar = $(".player-bar").eq(0),
+    playerId, // 全局ID
+    cacheDataPlaylist,
+    cacheDataComments;
+/**
+ * Swiper实例创建
+ */
 var NeteaseReview = new Swiper("div#neteaseReview", {
     wrapperClass: "wrapper",
     slideClass: "silde",
@@ -38,27 +40,47 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
     keyboard: true,
     mousewheel: false,
     on: {
+        /**
+         * 滑动变化开始监听
+         */
         slideChangeTransitionStart: function() {
             playerControl('pause');
         },
+        /**
+         * 滑动变化结束监听
+         */
         slideChangeTransitionEnd: function() {
             slide = NeteaseReview.slides[NeteaseReview.activeIndex];
             id = slide.getAttribute('music-id');
             playerId = id; // 同步全局id
+
+            $.cookie('play', id, { expires: 1 }); // 记录当前歌曲ID
+            $.cookie('record', '0', { expires: 1 }); // 初始化当前歌曲引索
+            for (q = 0; q < cacheDataPlaylist['playlist']['tracks'].length; q++) {
+                if (cacheDataPlaylist['playlist']['tracks'][q]['id'] == $.cookie('play')) {
+                    $.cookie('record', q, { expires: 1 }); // 记录当前歌曲的引索
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
             playerLoader(id);
             $("div.cover").eq(0).css("background-color", _color_());
             _overlay_('hidden');
         },
-        slidePrevTransitionStart: function() {
-            $.cookie('play', parseInt($.cookie('play')) - 1, { expires: 1 });
-        },
+        /**
+         * Next滑动开始监听
+         */
         slideNextTransitionStart: function() {
             _overlay_('show');
-            $.cookie('play', parseInt($.cookie('play')) + 1, { expires: 1 });
         },
+        /**
+         * Next滑动结束监听
+         */
         slideNextTransitionEnd: function() {
             if (NeteaseReview.isEnd) {
-                detailLoader(playList, onceLoad, parseInt($.cookie('play')) - 1);
+                detailLoader(playList, onceLoad, parseInt($.cookie('record')) + 1);
             }
 
             cacheDataComments = null;
@@ -72,33 +94,33 @@ var NeteaseReview = new Swiper("div#neteaseReview", {
 
 $(function() {
     if (playList) {
+        NeteaseReview.appendSlide('<div class="silde"><h1 id="comment" class="title-h1 title-style">网易云热评墙(双击评论可刷新)</h1><h3 id="author" class="title-h3 title-style">向左滑动开始你的旅程</h3></div>');
 
+        // 断线重连
+        cList = $.cookie('list');
+        cPlay = $.cookie('play');
+        cRecord = $.cookie('record');
+        if (cPlay && cList && cRecord && cList == playList) {
+            $("h3#author").text('已为你跳转到上次关闭时的进度');
+            $.cookie('play', playerId, { expires: 1 });
+            detailLoader(playList, onceLoad, cRecord);
+        } else {
+            $.cookie('list', playList, { expires: 1 });
+            $.cookie('play', null);
+            detailLoader(playList, onceLoad);
+        }
+
+        $("div.cover").eq(0).css("background-color", _color_());
+        /**
+         * 初始化事件监听
+         */
+        player.on('ended', function() {
+            NeteaseReview.slideNext();
+        });
     } else {
         NeteaseReview.appendSlide('<div class="silde"><h1 id="comment" class="title-h1 title-style">无法获得歌单信息</h1><h3 id="author" class="title-h3 title-style">请传入歌单ID</h3></div>');
         return false;
     }
-
-    NeteaseReview.appendSlide('<div class="silde"><h1 id="comment" class="title-h1 title-style">网易云热评墙(双击评论可刷新)</h1><h3 id="author" class="title-h3 title-style">向左滑动开始你的旅程</h3></div>');
-
-    cList = $.cookie('list');
-    cPlay = $.cookie('play');
-    if (cPlay && cPlay > 0 && cList && cList == playList) {
-        $("h3#author").text('已为你跳转到上次关闭时的进度');
-        $.cookie('play', parseInt(cPlay) - 1, { expires: 1 }); // 去重
-        detailLoader(playList, onceLoad, cPlay);
-    } else {
-        $.cookie('list', playList, { expires: 1 });
-        $.cookie('play', '0', { expires: 1 });
-        detailLoader(playList, onceLoad);
-    }
-
-    $("div.cover").eq(0).css("background-color", _color_());
-    /**
-     * 初始化事件监听
-     */
-    player.on('ended', function() {
-        NeteaseReview.slideNext();
-    });
 });
 
 function commentLoader(id) {
@@ -109,7 +131,7 @@ function commentLoader(id) {
         cacheDataComments = data;
     }
 
-    slide = $("div[music-id='" + id + "']");
+    slide = $("div[music-id='" + playerId + "']");
 
     for (c = 0; c < data['hotComments'].length; c++) {
         comment = data['hotComments'][Math.floor(Math.random() * data['hotComments'].length)];
@@ -152,9 +174,9 @@ function playerControl(c) {
 }
 
 function playerLoader(ids) {
-    for (e = 0; e < cacheDataPlaylist['playlist']['tracks'].length; e++) {
-        if (cacheDataPlaylist['playlist']['tracks'][e]['id'] == playerId) {
-            song = cacheDataPlaylist['playlist']['tracks'][e];
+    for (r = 0; r < cacheDataPlaylist['playlist']['tracks'].length; r++) {
+        if (cacheDataPlaylist['playlist']['tracks'][r]['id'] == playerId) {
+            song = cacheDataPlaylist['playlist']['tracks'][r];
         }
     }
 
@@ -165,12 +187,17 @@ function playerLoader(ids) {
     $(".netease-name").eq(0).text(song['name']);
     $(".netease-artist").eq(0).text(artist);
 
-    if (playerId) {
-        music = ajaxRequest('/song/url', 'id=' + ids);
+    $("title").text(song['name']);
+
+    music = ajaxRequest('/song/url', 'id=' + ids);
+    if (playerId && music['data'][0]) {
         player.attr('src', music['data'][0]['url']);
         playerControl('play');
     }
 
+    /**
+     * 进度条
+     */
     e = $("input#bar");
     e.attr('max', song['dt']);
     e.on('input', function() {
@@ -191,6 +218,7 @@ function detailLoader(id, m, b = 0) {
         data = ajaxRequest('/playlist/detail', 'id=' + id);
         cacheDataPlaylist = data;
     }
+
     $("title").text(data['playlist']['name']);
     c = 0
     for (e = b; e < data['playlist']['tracks'].length && c < m; e++) {
@@ -200,6 +228,9 @@ function detailLoader(id, m, b = 0) {
         NeteaseReview.appendSlide('<div class="silde" music-id="' + id + '""><h1 id="comment" class="title-h1 title-style">加载中...</h1><h3 id="author" class="title-h3 title-style" onclick="copyComment()">加载中...</h3></div>');
         c++;
     }
+    /**
+     * 双击监听事件
+     */
     $("h1.title-h1:not(:eq(0))").dblclick(function() {
         console.log('dblclick');
         commentLoader(playerId);
@@ -261,7 +292,7 @@ function _overlay_(s) {
 function _color_() {
     this.r = Math.floor(Math.random() * 250);
     this.g = Math.floor(Math.random() * 250);
-    this.b = Math.floor(Math.random() * 250);
+    this.b = Math.floor(Math.random() * 200);
     return 'rgba(' + this.r + ', ' + this.g + ', ' + this.b + ', 1)';
 }
 
