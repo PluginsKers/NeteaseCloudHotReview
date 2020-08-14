@@ -10,7 +10,7 @@
 
 ## 写在前面
 
-![https://blog.52craft.cc/index.php/archives/19/](https://img.shields.io/badge/build-v1.0.0-green)
+![https://blog.52craft.cc/index.php/archives/19/](https://img.shields.io/badge/build-v1.4.0-green)
 
 对于上一个热评墙的坑并不是很满意的说！  
 那么...再开一个！   
@@ -73,6 +73,8 @@
 - 更新了样式
 - 避免页面曝光度太大，增加了补偿
 
-## 获取
+## 安装
 
-章鱼猫
+开箱即用速食方法
+
+`git clone https://github.com/PluginsKers/NeteaseCloudHotReview.git`
